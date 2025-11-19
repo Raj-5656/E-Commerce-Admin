@@ -13,7 +13,7 @@ const ProtectedRoute:React.FC<layout> = ({ children }) => {
     return <LoadingSpinner />;
   }
 
-  if (!user) {
+  if (user?.role !== 'admin') {
     // Redirect to login page with return url
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
