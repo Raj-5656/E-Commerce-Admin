@@ -1,20 +1,25 @@
+// AuthContext.tsx
 import React, {
   createContext,
-  useState,
   useContext,
+  useState,
   useEffect,
 } from "react";
+import axiosInterceptor from "../api/axios";
 
-interface User {
+// 👇 Configure axios to send credentials (cookies) with every request
+
+export interface User {
   id: number;
   email: string;
   name: string;
-  role:string
+  role: string;
 }
 
-interface AuthContextType {
+export interface AuthContextType {
   user: User | null;
   loading: boolean;
+  refetchUser: () => Promise<void>; // Optionally expose refetch
 }
 
 interface AuthProviderProps {
@@ -23,29 +28,48 @@ interface AuthProviderProps {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+// Replace with your actual auth API endpoint
+
 export function AuthProvider({ children }: AuthProviderProps) {
-  // ✅ Initialize user state directly from localStorage
-  const [user] = useState<User | null>(() => {
-    const stored = localStorage.getItem("user");
-    return stored ? JSON.parse(stored) : null;
-  });
+  const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-  
+
+  // Fetch current user session (relies on cookie being sent automatically)
+  const fetchUser = async () => {
+    try {
+      const response = await axiosInterceptor.get(`/auth/check`);
+      setUser(response?.data?.user); // assuming { user: { id, email, ... } }
+    } catch (error) {
+      // Unauthorized or invalid session → clear user
+      setUser(null);
+      console.warn("No valid session:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    // Simulate async behavior (like API call delay)
-    const timer = setTimeout(() => setLoading(false), 0);
-    return () => clearTimeout(timer);
+    fetchUser(); // Initial load
   }, []);
 
-  const value: AuthContextType = { user, loading };
+  const value: AuthContextType = {  
+    user,
+    loading,
+    refetchUser: fetchUser,
+  };
 
-  return <AuthContext.Provider value={value}> {children} </AuthContext.Provider>
+  return (
+    <AuthContext.Provider value={value}>
+      {children}
+    </AuthContext.Provider>
+  );
 }
 
-// eslint-disable-next-line react-refresh/only-export-components
+// Custom hook
 export function useAuth(): AuthContextType {
   const context = useContext(AuthContext);
-  if (!context) throw new Error("useAuth must be used within an AuthProvider");
+  if (!context) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
   return context;
 }
