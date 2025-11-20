@@ -2,16 +2,22 @@ import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider } 
 import Home from './pages/public/Home'
 import AuthLayout from './layouts/AuthLayout'
 import Login from './pages/auth/Login'
-import Register from './pages/auth/Register'
 import MasterLayout from './layouts/MasterLayout'
+import ProtectedRoute from './components/common/ProtectedRoute'
 
 const App = () => {
   const router = createBrowserRouter(
     createRoutesFromElements(
       <Route>
-        <Route path="/" element={<MasterLayout><Home /></MasterLayout>} />
+
+        {/* Auth Routes (Login/Register) */}
         <Route path='/login' element={<AuthLayout><Login /></AuthLayout>} />
-        <Route path='/register' element={<AuthLayout><Register /></AuthLayout>} />
+        
+        {/* Protected Admin Routes */}
+        {/* Protected Admin Routes */}
+        <Route path="/" element={<ProtectedRoute> <MasterLayout> <Home /></MasterLayout></ProtectedRoute>
+          } 
+        />
       </Route>
     )
   )

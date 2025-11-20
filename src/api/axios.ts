@@ -1,35 +1,56 @@
-// axiosInstance.js
-import axios from 'axios';
+// 
 
-const axiosInterceptor = axios.create({
+// src/api/axios.js
+import axios from "axios";
+
+const axiosInstance = axios.create({
   baseURL: import.meta.env.VITE_APP_API_BASE_URL,
-  withCredentials: true, // 👈 crucial for cookies
+  withCredentials: true, // 🔥 Essential for sending cookies automatically
+  timeout: 10000,
+  headers: {
+    "Content-Type": "application/json",
+  },
 });
 
-// Request interceptor (optional)
-axiosInterceptor.interceptors.request.use(
+// REQUEST INTERCEPTOR - Minimal & Clean
+axiosInstance.interceptors.request.use(
   (config) => {
-    console.log('Sending request with credentials');
+    // Optional: Add request logging in development
+    if (import.meta.env.DEV) {
+      console.log(`🚀 ${config.method?.toUpperCase()} ${config.url}`);
+    }
     return config;
   },
-  (error) => {
-    return Promise.reject(error);
-  }
+  (error) => Promise.reject(error)
 );
 
-// Response interceptor (e.g., handle 401 for expired sessions)
-axiosInterceptor.interceptors.response.use(
-  (response) => {
-    // Cookies are already handled by browser — nothing to do here!
-    return response;
-  },
-  (error) => {
-    if (error.response?.status === 401) {
-      // Redirect to login, clear local state, etc.
-      window.location.href = '/login';
+// RESPONSE INTERCEPTOR - Handles 401 gracefully
+axiosInstance.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const { response, config } = error;
+
+    // Handle 401 Unauthorized (Token invalid/expired)
+    if (response?.status === 401) {
+      console.warn("🔐 Session expired or invalid - AuthContext will handle");
+      
+      // Clear user state by emitting event (AuthContext listens for this)
+      window.dispatchEvent(new CustomEvent("auth:unauthorized"));
     }
+
+    // Handle other common errors (optional)
+    else if (response?.status === 404) {
+      console.error("🔍 Resource not found:", config.url);
+    }
+    else if (response?.status === 500) {
+      console.error("🚨 Server error:", config.url);
+    }
+    else if (!response) {
+      console.error("🌐 Network error - server unreachable");
+    }
+
     return Promise.reject(error);
   }
 );
 
-export default axiosInterceptor;
+export default axiosInstance;
