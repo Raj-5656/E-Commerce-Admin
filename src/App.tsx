@@ -1,12 +1,12 @@
 import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider } from 'react-router-dom'
-import Home from './pages/public/Dashboard'
+import Home from './pages/dashboard/Dashboard'
 import AuthLayout from './layouts/AuthLayout'
 import Login from './pages/auth/Login'
 import MasterLayout from './layouts/MasterLayout'
 import ProtectedRoute from './components/common/ProtectedRoute'
-import Category from './pages/public/Category'
-import SubCategory from './pages/public/SubCategory'
-import Product from './pages/public/Product'
+import Category from './pages/category/Category'
+import SubCategory from './pages/sub-category/SubCategory'
+import Product from './pages/product/Product'
 import PublicRoute from './components/common/PublicRoute'
 
 const App = () => {
