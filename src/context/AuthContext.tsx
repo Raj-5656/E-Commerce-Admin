@@ -12,7 +12,7 @@ export interface AuthContextType {
   user: User | null;
   loading: boolean;
   refetchUser: () => Promise<void>;
-  handleLogout: () => Promise<Boolean>;
+  handleLogout: () => Promise<boolean>;
 }
 
 interface AuthProviderProps {

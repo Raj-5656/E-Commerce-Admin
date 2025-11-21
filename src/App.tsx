@@ -7,6 +7,7 @@ import ProtectedRoute from './components/common/ProtectedRoute'
 import Category from './pages/public/Category'
 import SubCategory from './pages/public/SubCategory'
 import Product from './pages/public/Product'
+import PublicRoute from './components/common/PublicRoute'
 
 const App = () => {
   const router = createBrowserRouter(
@@ -14,7 +15,7 @@ const App = () => {
       <Route>
 
         {/* Auth Routes (Login/Register) */}
-        <Route path='/login' element={<AuthLayout><Login /></AuthLayout>} />
+        <Route path='/login' element={<PublicRoute><AuthLayout><Login /></AuthLayout></PublicRoute>} />
         
         {/* Protected Admin Routes */}
         {/* Protected Admin Routes */}
