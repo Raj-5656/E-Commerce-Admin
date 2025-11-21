@@ -5,7 +5,7 @@ import { useAuth } from '../../../context/AuthContext';
 import { LogOut, Package, Layers, Tags, Home } from 'lucide-react';
 
 const Header: React.FC = () => {
-  const { user } = useAuth();
+  const { user,handleLogout } = useAuth();
   const navigate = useNavigate()
 
   const navLinks = [
@@ -15,14 +15,17 @@ const Header: React.FC = () => {
     { path: '/product', label: 'Products', icon: Package },
   ];
 
-  const handleLogout = async () => {
-    navigate('/login')
-    // try {
-    //   await logout();
-    // } catch (error) {
-    //   console.error('Logout failed:', error);
-    // }
-  };
+  const logout = async() => {
+    try {
+     const response= await handleLogout()
+     if(response){
+       navigate('/login', { replace: true })
+     }
+    } catch (error) {
+      console.log("Logout error",error);
+      
+    }
+  }
 
   return (
     <header className="bg-white shadow-sm border-b border-gray-200">
@@ -48,7 +51,7 @@ const Header: React.FC = () => {
                 <NavLink
                   key={link.path}
                   to={link.path}
-                  className={({isActive}) => `inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition-colors ${isActive
+                  className={({ isActive }) => `inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition-colors ${isActive
                     ? 'border-indigo-500 text-gray-900'
                     : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                     }`}
@@ -68,7 +71,7 @@ const Header: React.FC = () => {
                   Welcome, <span className="font-medium">{user?.firstname}</span>
                 </span>
                 <button
-                  onClick={handleLogout}
+                  onClick={logout}
                   className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors"
                 >
                   <LogOut className="h-4 w-4 mr-2" />

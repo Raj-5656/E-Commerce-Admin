@@ -12,6 +12,7 @@ export interface AuthContextType {
   user: User | null;
   loading: boolean;
   refetchUser: () => Promise<void>;
+  handleLogout: () => Promise<Boolean>;
 }
 
 interface AuthProviderProps {
@@ -20,11 +21,12 @@ interface AuthProviderProps {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+
 export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
-   const fetchUser = async () => {
+  const fetchUser = async () => {
     try {
       const { user } = await AuthService.checkAuth();
       setUser(user);
@@ -37,8 +39,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
   };
 
   useEffect(() => {
-    fetchUser(); 
-    
+    fetchUser();
+
     const handleUnauthorized = () => {
       console.log("🔄 AuthContext: Received 401, clearing user");
       setUser(null);
@@ -51,10 +53,21 @@ export function AuthProvider({ children }: AuthProviderProps) {
       window.removeEventListener("auth:unauthorized", handleUnauthorized);
     };
   }, []);
-
+  const handleLogout = async () => {
+    try {
+      const response = await AuthService.logOut();
+      if (response.success) {
+        setUser(null)
+        return response.success
+      }
+    } catch (error) {
+      console.error('Logout failed:', error);
+    }
+  };
   const value: AuthContextType = {
     user,
     loading,
+    handleLogout,
     refetchUser: fetchUser,
   };
 

@@ -1,3 +1,4 @@
+import axiosInstance from "./axios";
 import axiosInterceptor from "./axios";
 
 export interface LoginData {
@@ -8,7 +9,7 @@ export interface LoginData {
 export interface User {
   id: number;
   email: string;
-  name: string;
+  firstname: string;
   role: string;
 }
 
@@ -23,6 +24,11 @@ class AuthService {
 
   async checkAuth(): Promise<{ user: User }> {
     const response = await axiosInterceptor.get('/auth/check');
+    return response.data;
+  }
+
+  async logOut() {
+    const response = await axiosInstance.post('./auth/logout');
     return response.data;
   }
 }

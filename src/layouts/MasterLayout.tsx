@@ -1,4 +1,3 @@
-import React ,{ViewTransition}from 'react';
 import Header from '../components/common/Header/Header';
 import Footer from '../components/common/Footer/Footer';
 interface layout {
