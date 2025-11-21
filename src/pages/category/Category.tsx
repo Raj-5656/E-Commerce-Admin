@@ -1,8 +1,11 @@
 import React from 'react'
+import CommonTab from '../../components/common/CommonTab'
+import { categoryConfig } from './categoryConfig'
 
 const Category = () => {
   return (
-    <div>Category</div>
+   <CommonTab tabs={categoryConfig.tabs} moduleConfig={categoryConfig}/>
+   
   )
 }
 

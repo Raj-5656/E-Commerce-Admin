@@ -1,8 +1,10 @@
 import React from 'react'
+import CommonTab from '../../components/common/CommonTab'
+import { subCategoryConfig } from './subCategoryConfig'
 
 const SubCategory = () => {
   return (
-    <div>SubCategory</div>
+    <CommonTab tabs={subCategoryConfig.tabs} moduleConfig={subCategoryConfig}/>
   )
 }
 
