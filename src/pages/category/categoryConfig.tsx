@@ -1,3 +1,5 @@
+import type { categoryData } from "../../api/CategoryApi";
+import CategoryApi from "../../api/CategoryApi";
 import CommonForm from "../../components/common/CommonForm";
 import CommonTable from "../../components/common/CommonTable";
 
@@ -29,6 +31,8 @@ export const categoryConfig = {
     fields: [
       { name: "name", label: "Name", type: "text", required: true },
     ],
-    submitUrl: "/category",
+    submitApi: async (payload: categoryData) => {
+      return await CategoryApi.createCategory(payload);
+    }
   },
 };

@@ -18,16 +18,24 @@ export interface TableConfig {
 export interface FieldConfig {
   name: string;
   label: string;
-  type: string;
+  type:
+  | "text"
+  | "email"
+  | "password"
+  | "number"
+  | "select"
+  | "textarea";
   required?: boolean;
   placeholder?: string;
-  options?: { value: any; label: string }[];
+  options?: { label: string; value: any }[];
+  fetchOptions?: () => Promise<any[]>;
 }
+
 
 export interface FormConfig<T = any> {
   defaultValues: T;
   fields: FieldConfig[];
-  submitUrl: string;
+   submitApi: (payload: T) => Promise<any>; 
 }
 
 export interface ModuleConfig<T = any> {
