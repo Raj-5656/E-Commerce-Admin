@@ -1,4 +1,3 @@
-import React from 'react'
 import CommonTab from '../../components/common/CommonTab'
 import { subCategoryConfig } from './subCategoryConfig'
 
