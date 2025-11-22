@@ -6,7 +6,7 @@ export interface categoryData {
 
 class CategoryApi {
     
-     getALlCategory = async () => {
+     getAllCategory = async () => {
 
         const response = await axiosInstance.get('/category')
         console.log(response);

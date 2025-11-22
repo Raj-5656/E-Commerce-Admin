@@ -1,3 +1,5 @@
+import type { TableColumn } from "react-data-table-component";
+
 // types.ts
 export interface TabConfig {
   id: string;
@@ -5,14 +7,19 @@ export interface TabConfig {
   component: React.ComponentType<any>;
 }
 
-export interface ColumnConfig {
-  name: string;
-  label: string;
-}
+// export interface ColumnConfig {
+//   name: string;
+//   label: string;
+// }
 
-export interface TableConfig {
-  columns: ColumnConfig[];
-  fetchUrl: string;
+export interface TableConfig<T = any> {
+  columns: TableColumn<T>[];
+  dataFetcher: () => Promise<T[]>;
+  // Optional RDT props (pass-through)
+  customStyles?: any;
+  fixedHeader?: boolean;
+  noDataComponent?: React.ReactNode;
+  progressComponent?: React.ReactNode;
 }
 
 export interface FieldConfig {
@@ -40,7 +47,7 @@ export interface FormConfig<T = any> {
 
 export interface ModuleConfig<T = any> {
   tabs: TabConfig[];
-  table: TableConfig;
+  table: TableConfig<T>;
   form: FormConfig<T>;
 }
 
@@ -53,6 +60,6 @@ export interface CommonFormProps<T = any> {
   form: FormConfig<T>;
 }
 
-export interface CommonTableProps {
-  table: TableConfig;
+export interface CommonTableProps<T = any> {
+  table: TableConfig<T>; // 👈 was missing <T>
 }

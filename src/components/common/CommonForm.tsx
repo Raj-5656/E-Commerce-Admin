@@ -21,12 +21,14 @@ const CommonForm = <T extends Record<string, any>>({ form }: CommonFormProps<T>)
     const onSubmit: SubmitHandler<T> = async (data) => {
         try {
             const result = await form.submitApi(data);
-            toast.success('Form submitted successfully!');
+            toast.success(result?.message);
             reset();
 
         } catch (err: any) {
             // Error toast
-            toast.error(err.message || 'Failed to submit form');
+            console.log(err);
+            
+            toast.error(err.response.data.message || 'Failed to submit form');
         }
     };
 
